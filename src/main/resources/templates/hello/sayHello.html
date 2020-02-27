@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页</title>
+
+    <link th:href="@{/hello/css/sayHello.css}" rel="stylesheet" type="text/css" />
+    <script th:src="@{/js/datetools.js}" rel="script" type="text/javascript"></script>
+</head>
+<body>
+
+    <h2 th:text="|欢迎您，${user.name}!|"></h2>
+
+    <div id="user" th:object="${user}">
+        用户：<div th:text="*{name}" class="info">小红</div>
+        年龄：<div th:text="*{age}" class="info">16</div>
+        生日：<div th:text="*{#dates.format(birthday,'yyyy-MM-dd')}" class="info">2004-06-01</div>
+        <br />朋友们：
+        <div th:each="friend,stat : *{friends}">
+            <div id="friend" th:object="${friend}">
+                <div class="info" th:text="${stat.count}"></div>
+                用户：<div th:text="*{name}" class="info">小芳</div>
+                年龄：<div th:text="*{age}" class="info">16</div>
+                生日：<div th:text="*{#dates.format(birthday,'yyyy-MM-dd')}" class="info">2004-07-01</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script th:inline="javascript">
+        const user = /*[[${user}]]*/;
+        console.info("name : " + user.name);
+        console.info("age : " + user.age);
+        console.info("birthday : " + dateFormat("yyyy-MM-dd",user.birthday));
+    </script>
+
+</body>
+</html>

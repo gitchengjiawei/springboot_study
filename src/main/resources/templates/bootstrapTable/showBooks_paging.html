@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Bootstrap Table 1</title>
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}" rel="script" type="text/javascript"></script>
+    <script th:src="@{/js/bootstrap.min.js}" rel="script" type="text/javascript"></script>
+    <script th:src="@{/js/bootstrap-table.min.js}" rel="script" type="text/javascript"></script>
+    <script th:src="@{/js/bootstrap-table-zh-CN.min.js}" rel="script" type="text/javascript"></script>
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+
+    <table id="mytab" class="table table-hover"></table>
+
+    <script type="text/javascript">
+        $('#mytab').bootstrapTable({
+            method: 'GET',
+            url: "/bt/getBookList",//请求路径
+            striped: true, //是否显示行间隔色
+            pageNumber: 1, //初始化加载第一页
+            pagination: true,//是否分页
+            // sidePagination: 'client',//server:服务器端分页|client：前端分页
+            sidePagination: 'server',//server:服务器端分页|client：前端分页
+            pageSize: 5,//单页记录数
+            pageList: [5, 10, 20, 30],//可选择单页记录数
+            showRefresh: false,//刷新按钮
+            queryParams : function(params) {//上传服务器的参数
+                console.info(JSON.stringify(params));
+                var temp = {
+                    offset :params.offset + 1,// SQL语句起始索引
+                    pageSize : params.limit  // 每页显示数量
+                };
+                return temp;
+            },
+            columns: [{
+                title: '书名',
+                field: 'bookName',
+                sortable: true
+            }, {
+                title: '作者',
+                field: 'author',
+                sortable: true
+            }, {
+                title: '类别',
+                field: 'category',
+            }, {
+                title: '价格',
+                field: 'price',
+            }, {
+                title: '出版时间',
+                field: 'publishTime',
+            }, {
+                title: '操作    <a href="/add_one.xhtml">添加图书</a>',
+                field: '',
+                events:window.operateEvents = {
+                    'click .edit': function (e, value, row, index) {
+                        alert("edit " + row['bookName']);
+                    },
+                    'click .remove': function (e, value, row, index) {
+                        alert("remove " + row['bookName']);
+                    },
+                },
+                formatter: operation,//对资源进行操作
+            }]
+        });
+
+        function operation(value, row, index) {
+            var htm = "<a class='remove' href=\"javascript:void(0)\">删除</a> " +
+                "<a class='edit' href=\"javascript:void(0)\">修改</a>"
+            return htm;
+        }
+
+        // 行内按钮，点击事件
+
+    </script>
+
+</body>
+
+</html>
